@@ -14,11 +14,20 @@ datasource db {
 }
 
 model User {
-  id            Int       @id @default(autoincrement())
-  firstname     String
-  lastname      String
-  password      String
-  email         String    @unique
-  createdAt     DateTime  @default(now())
-  avatar        Bytes?
+  id        Int      @id @default(autoincrement())
+  firstname String
+  lastname  String
+  password  String
+  email     String   @unique
+  createdAt DateTime @default(now())
+  avatar    Bytes?
+  authToken Token?
 }
+
+model Token {
+  userId       Int    @id @unique
+  accesToken   String
+  refreshToken String
+  user         User   @relation(fields: [userId], references: [id])
+}
+
