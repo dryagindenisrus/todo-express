@@ -1,11 +1,6 @@
-export class UserDto {
-  constructor(id: number, email: string, firstname: string, lastname: string) {\
-    this.id = id;
-    this.email = email;
-    this.firstname = firstname;
-    this.lastname = lastname;
-  }
+import { ShortUser } from "@/types/user.interface";
 
+export class UserDto implements ShortUser {
   id!: number;
   email!: string;
   firstname!: string;

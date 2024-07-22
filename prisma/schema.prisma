@@ -20,13 +20,12 @@ model User {
   password  String
   email     String   @unique
   createdAt DateTime @default(now())
-  avatar    Bytes?
+  avatar    String?
   authToken Token?
 }
 
 model Token {
   userId       Int    @id @unique
-  accesToken   String
   refreshToken String
   user         User   @relation(fields: [userId], references: [id])
 }
