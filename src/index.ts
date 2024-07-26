@@ -2,6 +2,7 @@ import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import { router } from './routes';
+import { checkDatabaseConnection } from '@/utils/checkDatabaseConnection';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -19,6 +20,7 @@ app.use('/api/v1/', router);
 
 // Start server handler
 const server = app.listen(port, async () => {
+  await checkDatabaseConnection();
   console.log(`Server is running at http://localhost:${port}`);
 });
 
