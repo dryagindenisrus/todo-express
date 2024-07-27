@@ -15,8 +15,7 @@ class AuthController {
         maxAge: jwtTokenLivetoSec(jwtConfig.refresh.options.expiresIn),
         httpOnly: true,
       });
-      const newUser = await registration(email, password, firstname, lastname);
-      response.status(201).send(newUser);
+      response.status(201).send(userData);
     } catch (error) {
       if (error instanceof UserAlreadyExistsError) {
         response.status(httpStatus.CONFLICT).send(error.message);

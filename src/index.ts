@@ -1,7 +1,10 @@
 import express, { Application } from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import swaggerUi from 'swagger-ui-express';
 import { router } from './routes';
+import { checkDatabaseConnection } from '@/utils/checkDatabaseConnection';
+import { swaggerConfig } from './config/swagger';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -14,11 +17,15 @@ const port = process.env.PORT || 8000;
 app.use(cors());
 app.use(express.json());
 
+// Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig.spec, swaggerConfig.options));
+
 // Routers
 app.use('/api/v1/', router);
 
 // Start server handler
 const server = app.listen(port, async () => {
+  await checkDatabaseConnection();
   console.log(`Server is running at http://localhost:${port}`);
 });
 
