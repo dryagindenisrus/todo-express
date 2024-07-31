@@ -1,15 +1,83 @@
-openapi: 3.0.0
+openapi: 3.1.0
 info:
-  title: "Express TODO RESTful api"
+  title: "Express TODO RESTful API"
   version: "1.0.0"
   description: "This is a simple CRUD API application made with Express and documented with Swagger"
 servers:
-  - url: "http://localhost:8000/api/v1"
+  - url: "http://localhost:3000/api/v1"
     description: "Development server"
 paths:
-  /:
-    get:
-      summary: "Hello endpoint"
+  /auth/register:
+    post:
+      summary: "User Registration"
+      description: "Register a new user and return created user with auth tokens"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "user@example.com"
+                password:
+                  type: string
+                  format: password
+                  example: "12345678"
+                firstname:
+                  type: string
+                  example: "Ivan"
+                lastname:
+                  type: string
+                  example: "Ivanov"
+              required:
+                - email
+                - password
+                - firstname
+                - lastname
       responses:
-        200:
-          description: "Returns: Hello World!"
+        201:
+          description: "User registered successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: number
+                    example: "1"
+                  email:
+                    type: string
+                    format: email
+                    example: "user@example.com"
+                  firstname:
+                    type: string
+                    example: "Ivan"
+                  lastname:
+                    type: string
+                    example: "Ivanov"
+                  avatarpath:
+                    type: string
+                    example: null
+                  accessToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  refreshToken:
+                    type: string
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+        409:
+          description: "User already exists"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "User with this email already exists"
+        500:
+          description: "Internal server error"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Internal server error"
