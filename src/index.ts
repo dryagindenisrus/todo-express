@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import { router } from './routes';
 import { checkDatabaseConnection } from '@/utils/checkDatabaseConnection';
 import { swaggerConfig } from './config/swagger';
+import { corsConfig } from './config/cors';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -14,7 +15,7 @@ const app: Application = express();
 const port = process.env.PORT || 8000;
 
 // Middleware для обработки CORS
-app.use(cors());
+app.use(cors(corsConfig));
 app.use(express.json());
 
 // Swagger
