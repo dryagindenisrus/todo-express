@@ -15,7 +15,7 @@ class AuthController {
         maxAge: jwtTokenLivetoSec(jwtConfig.refresh.options.expiresIn),
         httpOnly: true,
       });
-      response.status(201).send(userData);
+      response.status(httpStatus.CREATED).send(userData);
     } catch (error) {
       if (error instanceof UserAlreadyExistsError) {
         response.status(httpStatus.CONFLICT).send(error.message);
