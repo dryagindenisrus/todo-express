@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
 import { DatabaseError } from '@/errors/DatabaseError';
 
-export const createUser = async (
+export const addNewUser = async (
   email: string,
   password: string,
   firstname: string,
