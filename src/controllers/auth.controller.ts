@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { login, registration } from '@/services/auth.service';
+import { login, logout, registration } from '@/services/auth.service';
 import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
 import { DatabaseError } from '@/errors/DatabaseError';
 import httpStatus from 'http-status';
@@ -39,6 +39,23 @@ class AuthController {
       });
 
       response.status(httpStatus.OK).send(userData);
+    } catch (error) {
+      if (error instanceof UserNotFoundError) {
+        response.status(httpStatus.NOT_FOUND).send(error.message);
+      } else if (error instanceof InvalidDataError) {
+        response.status(httpStatus.INTERNAL_SERVER_ERROR).send(error.message);
+      } else {
+        response.status(httpStatus.INTERNAL_SERVER_ERROR).send('Internal server error');
+      }
+    }
+  }
+
+  async logout(request: Request, response: Response) {
+    try {
+      const { refreshToken } = request.cookies;
+      await logout(refreshToken);
+      response.clearCookie('refreshToken');
+      return response.status(httpStatus.OK);
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         response.status(httpStatus.NOT_FOUND).send(error.message);

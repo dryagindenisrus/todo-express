@@ -1,7 +1,7 @@
 import { DatabaseError } from '@/errors/DatabaseError';
 import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
 import { createUser, getUserByEmail } from '@/services/user.service';
-import { generateTokens, saveToken } from './token.service';
+import { generateTokens, removeToken, saveToken } from './token.service';
 import { UserDto } from '@/dto/User.dto';
 import { AuthUserResponse } from '@/dto/AuthUserResponse.dto';
 import bcrypt from 'bcrypt';
@@ -20,8 +20,8 @@ export const registration = async (
       id: newUser.id,
       email: newUser.email,
       firstname: newUser.firstname,
-      lastname: newUser.lastname
-    }
+      lastname: newUser.lastname,
+    };
     const tokenPair = generateTokens({ ...userDto });
     await saveToken(newUser.id, tokenPair.refreshToken);
 
@@ -33,7 +33,7 @@ export const registration = async (
       avatarpath: newUser.avatar,
       accessToken: tokenPair.accessToken,
       refreshToken: tokenPair.refreshToken,
-    }
+    };
 
     return userWithTokens;
   } catch (error) {
@@ -42,22 +42,19 @@ export const registration = async (
     } else if (error instanceof DatabaseError) {
       throw new DatabaseError(error.message);
     } else {
-      throw new Error('Registration error'); 
+      throw new Error('Registration error');
     }
   }
 };
 
-export const login = async (
-  email: string,
-  password: string
-) => {
+export const login = async (email: string, password: string) => {
   try {
     const user = await getUserByEmail(email);
     if (!user) {
       throw new UserNotFoundError('User not found');
     }
 
-    const isPassEquals = await bcrypt.compare(password, user.password)
+    const isPassEquals = await bcrypt.compare(password, user.password);
     if (!isPassEquals) {
       throw new InvalidDataError('Invalid password');
     }
@@ -66,8 +63,8 @@ export const login = async (
       id: user.id,
       email: user.email,
       firstname: user.firstname,
-      lastname: user.lastname
-    }
+      lastname: user.lastname,
+    };
     const tokenPair = generateTokens({ ...userDto });
     await saveToken(user.id, tokenPair.refreshToken);
 
@@ -79,7 +76,7 @@ export const login = async (
       avatarpath: user.avatar,
       accessToken: tokenPair.accessToken,
       refreshToken: tokenPair.refreshToken,
-    }
+    };
     return userWithTokens;
   } catch (error) {
     if (error instanceof UserNotFoundError) {
@@ -92,3 +89,17 @@ export const login = async (
   }
 };
 
+export const logout = async (userId: number) => {
+  try {
+    const token = removeToken(userId);
+    return token;
+  } catch (error) {
+    if (error instanceof UserNotFoundError) {
+      throw new UserNotFoundError(error.message);
+    } else if (error instanceof DatabaseError) {
+      throw new InvalidDataError(error.message);
+    } else {
+      throw new Error('Logout error');
+    }
+  }
+};

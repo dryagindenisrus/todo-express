@@ -42,3 +42,10 @@ export const saveToken = async (userId: number, refreshToken: string) => {
 
   return refreshToken;
 };
+
+export const removeToken = async (userId: number) => {
+  const tokenData = await prisma.token.delete({
+    where: {userId},
+  })
+  return tokenData;
+};
