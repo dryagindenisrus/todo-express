@@ -2,6 +2,7 @@ import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
 import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
 import { DatabaseError } from '@/errors/DatabaseError';
+import { UserNotFoundError } from '@/errors/UserNotFoundError';
 
 export const createUser = async (
   email: string,
@@ -37,5 +38,29 @@ export const createUser = async (
       throw error;
     }
     throw new DatabaseError('Error while creating user');
+  }
+};
+
+
+export const getUserByEmail = async (
+  email: string,
+) => {
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: {
+        email,
+      },
+    });
+
+    if (!existingUser) {
+      throw new UserNotFoundError('User not found');
+    }
+
+    return existingUser;
+  } catch (error) {
+    if (error instanceof UserNotFoundError) {
+      throw error;
+    }
+    throw new DatabaseError('Error while searching user');
   }
 };
