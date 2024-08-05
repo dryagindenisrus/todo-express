@@ -1,8 +1,4 @@
-export interface ShortUser {
-  
-}
-
-export interface User extends ShortUser {
+export interface User {
   id: number;
   email: string;
   firstname: string;
