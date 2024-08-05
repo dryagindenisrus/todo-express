@@ -1,9 +1,9 @@
-import { TokensDto } from "./Tokens.dto";
-
-export class AuthUser extends TokensDto {
+export class AuthUserResponse {
   id!: number;
   email!: string;
   firstname!: string;
   lastname!: string;
   avatarpath!: string | null;
+  accessToken!: string;
+  refreshToken!: string;
 }

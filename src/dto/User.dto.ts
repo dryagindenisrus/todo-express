@@ -1,6 +1,4 @@
-import { ShortUser } from "@/types/user.interface";
-
-export class UserDto implements ShortUser {
+export class UserDto {
   id!: number;
   email!: string;
   firstname!: string;

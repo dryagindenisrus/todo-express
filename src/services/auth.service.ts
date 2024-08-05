@@ -3,7 +3,7 @@ import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
 import { createUser, getUserByEmail } from '@/services/user.service';
 import { generateTokens, saveToken } from './token.service';
 import { UserDto } from '@/dto/User.dto';
-import { AuthUser } from '@/dto/AuthUser.dto';
+import { AuthUserResponse } from '@/dto/AuthUserResponse.dto';
 import bcrypt from 'bcrypt';
 import { UserNotFoundError } from '@/errors/UserNotFoundError';
 import { InvalidDataError } from '@/errors/InvalidDataError';
@@ -25,7 +25,7 @@ export const registration = async (
     const tokenPair = generateTokens({ ...userDto });
     await saveToken(newUser.id, tokenPair.refreshToken);
 
-    const userWithTokens: AuthUser = {
+    const userWithTokens: AuthUserResponse = {
       id: newUser.id,
       email: newUser.email,
       firstname: newUser.firstname,
@@ -71,7 +71,7 @@ export const login = async (
     const tokenPair = generateTokens({ ...userDto });
     await saveToken(user.id, tokenPair.refreshToken);
 
-    const userWithTokens: AuthUser = {
+    const userWithTokens: AuthUserResponse = {
       id: user.id,
       email: user.email,
       firstname: user.firstname,
