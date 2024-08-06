@@ -6,6 +6,7 @@ import { router } from './routes';
 import { checkDatabaseConnection } from '@/utils/checkDatabaseConnection';
 import { swaggerConfig } from './config/swagger';
 import { corsConfig } from './config/cors';
+import cookieParser from 'cookie-parser';
 
 // Load environment variables from .env file
 dotenv.config();
@@ -17,9 +18,14 @@ const port = process.env.PORT || 8000;
 // Middleware для обработки CORS
 app.use(cors(corsConfig));
 app.use(express.json());
+app.use(cookieParser());
 
 // Swagger
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerConfig.spec, swaggerConfig.options));
+app.use(
+  '/api-docs',
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerConfig.spec, swaggerConfig.options)
+);
 
 // Routers
 app.use('/api/v1/', router);

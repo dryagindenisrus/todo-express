@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 import { jwtConfig } from '@/config/jwt';
 import { prisma } from '@/lib/prisma';
 import { UserDto } from '@/dto/User.dto';
+import { UserNotFoundError } from '@/errors/UserNotFoundError';
 
 export const generateTokens = (payload: UserDto) => {
   const accessToken = jwt.sign(
@@ -21,7 +22,6 @@ export const generateTokens = (payload: UserDto) => {
 };
 
 export const saveToken = async (userId: number, refreshToken: string) => {
-  
   const existingToken = await prisma.token.findUnique({
     where: { userId: userId },
   });
@@ -43,9 +43,22 @@ export const saveToken = async (userId: number, refreshToken: string) => {
   return refreshToken;
 };
 
-export const removeToken = async (userId: number) => {
-  const tokenData = await prisma.token.delete({
-    where: {userId},
+export const removeToken = async (refreshToken: string) => {
+  const findedToken = await prisma.token.findFirst({
+    where: {
+      refreshToken: refreshToken
+    }
   })
-  return tokenData;
+
+  if (!findedToken) {
+    throw new UserNotFoundError('User token not found')
+  }
+
+  const deletedToken = await prisma.token.delete({
+    where: {
+      userId: findedToken.userId,
+    },
+  });
+  
+  return deletedToken;
 };

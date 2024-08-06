@@ -89,9 +89,9 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const logout = async (userId: number) => {
+export const logout = async (refreshToken: string) => {
   try {
-    const token = removeToken(userId);
+    const token = await removeToken(refreshToken);
     return token;
   } catch (error) {
     if (error instanceof UserNotFoundError) {
@@ -99,7 +99,7 @@ export const logout = async (userId: number) => {
     } else if (error instanceof DatabaseError) {
       throw new InvalidDataError(error.message);
     } else {
-      throw new Error('Logout error');
+      throw error;
     }
   }
 };

@@ -13,6 +13,7 @@ class AuthController {
     try {
       const { email, password, firstname, lastname } = request.body;
       const userData = await registration(email, password, firstname, lastname);
+      console.log('UserData', userData);
       response.cookie('refreshToken', userData.refreshToken, {
         maxAge: jwtTokenLivetoSec(jwtConfig.refresh.options.expiresIn),
         httpOnly: true,
@@ -33,7 +34,7 @@ class AuthController {
     try {
       const { email, password } = request.body;
       const userData = await login(email, password);
-      response.cookie('refreshToken', userData, {
+      response.cookie('refreshToken', userData.refreshToken, {
         maxAge: jwtTokenLivetoSec(jwtConfig.refresh.options.expiresIn),
         httpOnly: true,
       });
@@ -55,7 +56,7 @@ class AuthController {
       const { refreshToken } = request.cookies;
       await logout(refreshToken);
       response.clearCookie('refreshToken');
-      return response.status(httpStatus.OK);
+      response.status(httpStatus.NO_CONTENT).send();
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         response.status(httpStatus.NOT_FOUND).send(error.message);
