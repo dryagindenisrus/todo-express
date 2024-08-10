@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.7",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.21",
@@ -43,6 +44,7 @@
     "@types/yaml": "^1.9.7",
     "@typescript-eslint/eslint-plugin": "^7.13.1",
     "@typescript-eslint/parser": "^7.13.1",
+    "cookie-parser": "^1.4.6",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-config-standard": "^17.1.0",
