@@ -1,5 +1,5 @@
-import path from "path";
+import path from 'path';
 
 export const appConfig = {
-  rootDir: path.resolve(__dirname, '../../'),
-}
+  rootDir: path.resolve(__dirname, '../../')
+};

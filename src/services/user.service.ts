@@ -13,8 +13,8 @@ export const createUser = async (
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
-        email,
-      },
+        email
+      }
     });
 
     if (existingUser) {
@@ -28,8 +28,8 @@ export const createUser = async (
         email,
         password: hashPassword,
         firstname,
-        lastname,
-      },
+        lastname
+      }
     });
 
     return newUser;
@@ -41,15 +41,12 @@ export const createUser = async (
   }
 };
 
-
-export const getUserByEmail = async (
-  email: string,
-) => {
+export const getUserByEmail = async (email: string) => {
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
-        email,
-      },
+        email
+      }
     });
 
     if (!existingUser) {

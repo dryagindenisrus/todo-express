@@ -17,26 +17,26 @@ export const generateTokens = (payload: UserDto) => {
   );
   return {
     accessToken,
-    refreshToken,
+    refreshToken
   };
 };
 
 export const saveToken = async (userId: number, refreshToken: string) => {
   const existingToken = await prisma.token.findUnique({
-    where: { userId: userId },
+    where: { userId: userId }
   });
 
   if (existingToken) {
     await prisma.token.update({
       where: { userId: userId },
-      data: { refreshToken: refreshToken },
+      data: { refreshToken: refreshToken }
     });
   } else {
     await prisma.token.create({
       data: {
         userId: userId,
-        refreshToken: refreshToken,
-      },
+        refreshToken: refreshToken
+      }
     });
   }
 
@@ -48,17 +48,17 @@ export const removeToken = async (refreshToken: string) => {
     where: {
       refreshToken: refreshToken
     }
-  })
+  });
 
   if (!findedToken) {
-    throw new UserNotFoundError('User token not found')
+    throw new UserNotFoundError('User token not found');
   }
 
   const deletedToken = await prisma.token.delete({
     where: {
-      userId: findedToken.userId,
-    },
+      userId: findedToken.userId
+    }
   });
-  
+
   return deletedToken;
 };

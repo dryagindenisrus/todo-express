@@ -1,4 +1,4 @@
-import { Tokens } from "@/types/tokens.interface";
+import { Tokens } from '@/types/tokens.interface';
 
 export class TokensDto implements Tokens {
   accessToken!: string;

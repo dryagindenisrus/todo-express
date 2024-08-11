@@ -8,7 +8,7 @@ import bcrypt from 'bcrypt';
 import { UserNotFoundError } from '@/errors/UserNotFoundError';
 import { InvalidDataError } from '@/errors/InvalidDataError';
 
-export const registration = async (
+const register = async (
   email: string,
   password: string,
   firstname: string,
@@ -20,7 +20,7 @@ export const registration = async (
       id: newUser.id,
       email: newUser.email,
       firstname: newUser.firstname,
-      lastname: newUser.lastname,
+      lastname: newUser.lastname
     };
     const tokenPair = generateTokens({ ...userDto });
     await saveToken(newUser.id, tokenPair.refreshToken);
@@ -32,7 +32,7 @@ export const registration = async (
       lastname: newUser.lastname,
       avatarpath: newUser.avatar,
       accessToken: tokenPair.accessToken,
-      refreshToken: tokenPair.refreshToken,
+      refreshToken: tokenPair.refreshToken
     };
 
     return userWithTokens;
@@ -47,7 +47,7 @@ export const registration = async (
   }
 };
 
-export const login = async (email: string, password: string) => {
+const login = async (email: string, password: string) => {
   try {
     const user = await getUserByEmail(email);
     if (!user) {
@@ -63,7 +63,7 @@ export const login = async (email: string, password: string) => {
       id: user.id,
       email: user.email,
       firstname: user.firstname,
-      lastname: user.lastname,
+      lastname: user.lastname
     };
     const tokenPair = generateTokens({ ...userDto });
     await saveToken(user.id, tokenPair.refreshToken);
@@ -75,7 +75,7 @@ export const login = async (email: string, password: string) => {
       lastname: user.lastname,
       avatarpath: user.avatar,
       accessToken: tokenPair.accessToken,
-      refreshToken: tokenPair.refreshToken,
+      refreshToken: tokenPair.refreshToken
     };
     return userWithTokens;
   } catch (error) {
@@ -89,7 +89,7 @@ export const login = async (email: string, password: string) => {
   }
 };
 
-export const logout = async (refreshToken: string) => {
+const logout = async (refreshToken: string) => {
   try {
     const token = await removeToken(refreshToken);
     return token;
@@ -103,3 +103,5 @@ export const logout = async (refreshToken: string) => {
     }
   }
 };
+
+export default { register, login, logout };
