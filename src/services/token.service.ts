@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { UserDto } from '@/dto/User.dto';
 import { UserNotFoundError } from '@/errors/UserNotFoundError';
 
-export const generateTokens = (payload: UserDto) => {
+const generateTokens = (payload: UserDto) => {
   const accessToken = jwt.sign(
     payload,
     jwtConfig.access.secret,
@@ -21,7 +21,7 @@ export const generateTokens = (payload: UserDto) => {
   };
 };
 
-export const saveToken = async (userId: number, refreshToken: string) => {
+const saveToken = async (userId: number, refreshToken: string) => {
   const existingToken = await prisma.token.findUnique({
     where: { userId: userId }
   });
@@ -43,7 +43,7 @@ export const saveToken = async (userId: number, refreshToken: string) => {
   return refreshToken;
 };
 
-export const removeToken = async (refreshToken: string) => {
+const removeToken = async (refreshToken: string) => {
   const findedToken = await prisma.token.findFirst({
     where: {
       refreshToken: refreshToken
@@ -62,3 +62,5 @@ export const removeToken = async (refreshToken: string) => {
 
   return deletedToken;
 };
+
+export default { generateTokens, saveToken, removeToken };

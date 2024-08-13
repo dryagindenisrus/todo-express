@@ -1,7 +1,7 @@
 import { DatabaseError } from '@/errors/DatabaseError';
 import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
-import { createUser, getUserByEmail } from '@/services/user.service';
-import { generateTokens, removeToken, saveToken } from './token.service';
+import UserService from '@/services/user.service';
+import TokenService from './token.service';
 import { UserDto } from '@/dto/User.dto';
 import { AuthUserResponse } from '@/dto/AuthUserResponse.dto';
 import bcrypt from 'bcrypt';
@@ -15,25 +15,16 @@ const register = async (
   lastname: string
 ) => {
   try {
-    const newUser = await createUser(email, password, firstname, lastname);
-    const userDto: UserDto = {
-      id: newUser.id,
-      email: newUser.email,
-      firstname: newUser.firstname,
-      lastname: newUser.lastname
-    };
-    const tokenPair = generateTokens({ ...userDto });
-    await saveToken(newUser.id, tokenPair.refreshToken);
+    const newUser = await UserService.createUser(email, password, firstname, lastname);
+    const userDto: UserDto = new UserDto(newUser);
+    const tokenPair = TokenService.generateTokens({ ...userDto });
+    await TokenService.saveToken(newUser.id, tokenPair.refreshToken);
 
-    const userWithTokens: AuthUserResponse = {
-      id: newUser.id,
-      email: newUser.email,
-      firstname: newUser.firstname,
-      lastname: newUser.lastname,
-      avatarpath: newUser.avatar,
-      accessToken: tokenPair.accessToken,
-      refreshToken: tokenPair.refreshToken
-    };
+    const userWithTokens: AuthUserResponse = new AuthUserResponse({
+      ...newUser,
+      avatarpath: null,
+      ...tokenPair
+    });
 
     return userWithTokens;
   } catch (error) {
@@ -49,7 +40,7 @@ const register = async (
 
 const login = async (email: string, password: string) => {
   try {
-    const user = await getUserByEmail(email);
+    const user = await UserService.getUserByEmail(email);
     if (!user) {
       throw new UserNotFoundError('User not found');
     }
@@ -65,17 +56,13 @@ const login = async (email: string, password: string) => {
       firstname: user.firstname,
       lastname: user.lastname
     };
-    const tokenPair = generateTokens({ ...userDto });
-    await saveToken(user.id, tokenPair.refreshToken);
+    const tokenPair = TokenService.generateTokens({ ...userDto });
+    await TokenService.saveToken(user.id, tokenPair.refreshToken);
 
     const userWithTokens: AuthUserResponse = {
-      id: user.id,
-      email: user.email,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      avatarpath: user.avatar,
-      accessToken: tokenPair.accessToken,
-      refreshToken: tokenPair.refreshToken
+      ...user,
+      avatarpath: null,
+      ...tokenPair
     };
     return userWithTokens;
   } catch (error) {
@@ -91,7 +78,7 @@ const login = async (email: string, password: string) => {
 
 const logout = async (refreshToken: string) => {
   try {
-    const token = await removeToken(refreshToken);
+    const token = await TokenService.removeToken(refreshToken);
     return token;
   } catch (error) {
     if (error instanceof UserNotFoundError) {

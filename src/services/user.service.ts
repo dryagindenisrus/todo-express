@@ -3,13 +3,15 @@ import bcrypt from 'bcrypt';
 import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
 import { DatabaseError } from '@/errors/DatabaseError';
 import { UserNotFoundError } from '@/errors/UserNotFoundError';
+import { UserDto } from '@/dto/User.dto';
+import { User } from '@/types/user.interface';
 
-export const createUser = async (
+const createUser = async (
   email: string,
   password: string,
   firstname: string,
   lastname: string
-) => {
+): Promise<UserDto> => {
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -41,7 +43,7 @@ export const createUser = async (
   }
 };
 
-export const getUserByEmail = async (email: string) => {
+const getUserByEmail = async (email: string): Promise<User> => {
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -61,3 +63,5 @@ export const getUserByEmail = async (email: string) => {
     throw new DatabaseError('Error while searching user');
   }
 };
+
+export default { getUserByEmail, createUser };
