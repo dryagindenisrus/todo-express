@@ -1,4 +1,4 @@
-import { Response, Request } from 'express';
+import { Request, Response } from 'express';
 
 const createUser = async (request: Request, response: Response) => {
   response.send({});
@@ -16,4 +16,4 @@ const deleteUser = async (request: Request<{ id: number }>, response: Response) 
   response.send({});
 };
 
-export default { createUser, getUser, updateUser, deleteUser };
+export const UserController = { createUser, getUser, updateUser, deleteUser };

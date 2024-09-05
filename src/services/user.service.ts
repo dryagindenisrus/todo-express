@@ -1,5 +1,6 @@
-import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcrypt';
+
+import { prisma } from '@/lib/prisma';
 import { UserAlreadyExistsError } from '@/errors/UserAlreadyExistsError';
 import { DatabaseError } from '@/errors/DatabaseError';
 import { UserNotFoundError } from '@/errors/UserNotFoundError';
@@ -15,8 +16,8 @@ const createUser = async (
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
-        email
-      }
+        email,
+      },
     });
 
     if (existingUser) {
@@ -30,8 +31,8 @@ const createUser = async (
         email,
         password: hashPassword,
         firstname,
-        lastname
-      }
+        lastname,
+      },
     });
 
     return newUser;
@@ -47,8 +48,8 @@ const getUserByEmail = async (email: string): Promise<User> => {
   try {
     const existingUser = await prisma.user.findUnique({
       where: {
-        email
-      }
+        email,
+      },
     });
 
     if (!existingUser) {

@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+
 import { jwtConfig } from '@/config/jwt';
 import { prisma } from '@/lib/prisma';
 import { UserDto } from '@/dto/User.dto';
@@ -17,26 +18,26 @@ const generateTokens = (payload: UserDto) => {
   );
   return {
     accessToken,
-    refreshToken
+    refreshToken,
   };
 };
 
 const saveToken = async (userId: number, refreshToken: string) => {
   const existingToken = await prisma.token.findUnique({
-    where: { userId: userId }
+    where: { userId: userId },
   });
 
   if (existingToken) {
     await prisma.token.update({
       where: { userId: userId },
-      data: { refreshToken: refreshToken }
+      data: { refreshToken: refreshToken },
     });
   } else {
     await prisma.token.create({
       data: {
         userId: userId,
-        refreshToken: refreshToken
-      }
+        refreshToken: refreshToken,
+      },
     });
   }
 
@@ -46,8 +47,8 @@ const saveToken = async (userId: number, refreshToken: string) => {
 const removeToken = async (refreshToken: string) => {
   const findedToken = await prisma.token.findFirst({
     where: {
-      refreshToken: refreshToken
-    }
+      refreshToken: refreshToken,
+    },
   });
 
   if (!findedToken) {
@@ -56,8 +57,8 @@ const removeToken = async (refreshToken: string) => {
 
   const deletedToken = await prisma.token.delete({
     where: {
-      userId: findedToken.userId
-    }
+      userId: findedToken.userId,
+    },
   });
 
   return deletedToken;

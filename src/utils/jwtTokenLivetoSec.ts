@@ -1,3 +1,17 @@
+/**
+ * Converts a time string (e.g., "30m", "2h") into milliseconds.
+ *
+ * Supported time units:
+ * - `s`: seconds
+ * - `m`: minutes
+ * - `h`: hours
+ * - `d`: days
+ * - `w`: weeks
+ *
+ * @param {string} timeStr - The time string to convert, consisting of a number and a unit (e.g., "30m", "2h").
+ * @returns {number} The equivalent time in milliseconds.
+ * @throws {Error} Throws an error if the time string format is invalid or if an unsupported time unit is used.
+ */
 export const jwtTokenLivetoSec = (timeStr: string) => {
   const regex = /^(\d+)([smhdw])$/i;
   const match = timeStr.match(regex);

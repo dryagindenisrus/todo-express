@@ -23,7 +23,7 @@ const register = async (
     const userWithTokens: AuthUserResponse = new AuthUserResponse({
       ...newUser,
       avatarpath: null,
-      ...tokenPair
+      ...tokenPair,
     });
 
     return userWithTokens;
@@ -54,7 +54,7 @@ const login = async (email: string, password: string) => {
       id: user.id,
       email: user.email,
       firstname: user.firstname,
-      lastname: user.lastname
+      lastname: user.lastname,
     };
     const tokenPair = TokenService.generateTokens({ ...userDto });
     await TokenService.saveToken(user.id, tokenPair.refreshToken);
@@ -62,7 +62,7 @@ const login = async (email: string, password: string) => {
     const userWithTokens: AuthUserResponse = {
       ...user,
       avatarpath: null,
-      ...tokenPair
+      ...tokenPair,
     };
     return userWithTokens;
   } catch (error) {
@@ -91,4 +91,4 @@ const logout = async (refreshToken: string) => {
   }
 };
 
-export default { register, login, logout };
+export const AuthService = { register, login, logout };
